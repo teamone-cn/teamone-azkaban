@@ -625,6 +625,24 @@ public class FlowRunnerManager implements IFlowRunnerManager, EventListener<Even
   }
 
   @Override
+  public void cancelFlowJobs(int execId, String user, String jobNames) throws ExecutorManagerException {
+    final FlowRunner flowRunner = this.runningFlows.get(execId);
+
+    if (flowRunner == null) {
+      throw new ExecutorManagerException("Execution " + execId + " is not running.");
+    }
+
+    // account for those unexpected cases where a completed execution remains in the runningFlows
+    //collection due to, for example, the FLOW_FINISHED event not being emitted/handled.
+    if (Status.isStatusFinished(flowRunner.getExecutableFlow().getStatus())) {
+      LOGGER.warn("Found a finished execution in the list of running flows: " + execId);
+      throw new ExecutorManagerException("Execution " + execId + " is already finished.");
+    }
+
+    flowRunner.killJobs(user,jobNames);
+  }
+
+  @Override
   public void pauseFlow(final int execId, final String user)
       throws ExecutorManagerException {
     final FlowRunner runner = this.runningFlows.get(execId);

@@ -19,6 +19,10 @@ public enum EventType {
   PROJECT_UPLOADED,
   SCHEDULE_CREATED,
   JOB_PROPERTY_OVERRIDDEN,
+  JOB_ADDED,
+  JOB_DELETED,
+  FLOW_ADDED,
+  FLOW_DELETED,
   // User login/logout event types:
   USER_LOGIN,
   USER_LOGOUT;

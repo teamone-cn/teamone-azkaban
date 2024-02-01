@@ -21,16 +21,18 @@ package azkaban.executor;
  */
 public interface IFlowRunnerManager {
 
-  void pauseFlow(int execId, String user) throws ExecutorManagerException;
+    void pauseFlow(int execId, String user) throws ExecutorManagerException;
 
-  void resumeFlow(final int execId, String user) throws ExecutorManagerException;
+    void resumeFlow(final int execId, String user) throws ExecutorManagerException;
 
-  void cancelFlow(int execId, String user) throws ExecutorManagerException;
+    void cancelFlow(int execId, String user) throws ExecutorManagerException;
 
-  void cancelJobBySLA(int execId, String jobId) throws ExecutorManagerException;
+    void cancelFlowJobs(int execId, String user, String jobNames) throws ExecutorManagerException;
 
-  /**
-   * Attempts to retry the failed jobs in a running execution.
-   */
-  void retryFailures(int execId, String user) throws ExecutorManagerException;
+    void cancelJobBySLA(int execId, String jobId) throws ExecutorManagerException;
+
+    /**
+     * Attempts to retry the failed jobs in a running execution.
+     */
+    void retryFailures(int execId, String user) throws ExecutorManagerException;
 }

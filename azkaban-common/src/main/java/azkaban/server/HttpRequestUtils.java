@@ -160,6 +160,9 @@ public class HttpRequestUtils {
 
     if (hasParam(req, "disabled")) {
       final String disabled = getParam(req, "disabled");
+
+      System.out.println("disable----"+disabled);
+
       if (!disabled.isEmpty()) {
         // TODO edlu: see if it's possible to pass in the new format
         final List<DisabledJob> disabledList =

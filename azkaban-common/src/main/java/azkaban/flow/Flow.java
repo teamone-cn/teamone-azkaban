@@ -114,12 +114,18 @@ public class Flow {
         .getOrDefault(PROJECT_ID_PROPERTY, flow.getProjectId());
     final int projectVersion = (Integer) flowObject
         .getOrDefault(PROJECT_VERSION_PROPERTY, flow.getVersion());
-    final List<Object> propertiesList = (List<Object>) flowObject
-        .getOrDefault(PROPS_PROPERTY, new HashMap<>());
+
+    final List<Object> propertiesList =
+            (List<Object>) flowObject
+        .getOrDefault(PROPS_PROPERTY, new ArrayList<>());
+
     final List<Object> nodeList = (List<Object>) flowObject
-        .getOrDefault(NODES_PROPERTY, new HashMap<>());
+        .getOrDefault(NODES_PROPERTY,new ArrayList<>());
+
     final List<Object> edgeList = (List<Object>) flowObject
-        .getOrDefault(EDGES_PROPERTY, new HashMap<>());
+        .getOrDefault(EDGES_PROPERTY, new ArrayList<>());
+
+
     final Map<String, Object> metadata = (Map<String, Object>) flowObject
         .getOrDefault(METADATA_PROPERTY, flow.getMetadata());
     final List<String> failureEmails = (List<String>) flowObject
@@ -148,6 +154,7 @@ public class Flow {
     flow.setMailCreator(mailCreator);
     flow.setFailureAction(failureAction);
     flow.setSecurityTag(securityTag != null ? SecurityTag.valueOf(securityTag) : null);
+
     // Loading projects
     final Map<String, ImmutableFlowProps> properties = loadPropertiesFromObject(propertiesList);
     flow.addAllFlowProperties(properties.values());
@@ -308,6 +315,7 @@ public class Flow {
   public void addAllNodes(final Collection<Node> nodes) {
     for (final Node node : nodes) {
       addNode(node);
+      System.out.println("flow node -====---====--=="+node.toObject());
     }
   }
 

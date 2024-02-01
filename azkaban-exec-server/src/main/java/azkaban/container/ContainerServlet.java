@@ -168,6 +168,9 @@ public class ContainerServlet extends HttpServlet implements ConnectorParams {
       return;
     }
 
+    //todo
+    logger.info("进入了 ContainerServlet 的逻辑");
+
     try {
       this.flowContainer.cancelFlow(execid, user);
       respMap.put(ConnectorParams.STATUS_PARAM, ConnectorParams.RESPONSE_SUCCESS);

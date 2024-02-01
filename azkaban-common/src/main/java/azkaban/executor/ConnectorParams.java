@@ -28,6 +28,7 @@ public interface ConnectorParams {
   public static final String STATUS_ACTION = "status";
   public static final String EXECUTE_ACTION = "execute";
   public static final String CANCEL_ACTION = "cancel";
+  public static final String CANCEL_FLOW_JOBS_ACTION = "cancelFlowJobs";
   public static final String PAUSE_ACTION = "pause";
   public static final String RESUME_ACTION = "resume";
   public static final String PING_ACTION = "ping";

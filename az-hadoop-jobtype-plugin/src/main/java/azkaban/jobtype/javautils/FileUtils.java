@@ -15,8 +15,7 @@
  */
 package azkaban.jobtype.javautils;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

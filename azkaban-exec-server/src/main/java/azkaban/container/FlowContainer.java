@@ -554,6 +554,23 @@ public class FlowContainer implements IFlowRunnerManager, IMBeanRegistrable, Eve
   }
 
   @Override
+  public void cancelFlowJobs(int execId, String user, String jobNames) throws ExecutorManagerException {
+    logger.info("Cancel Flow called");
+    if (this.flowRunner == null) {
+      logger.warn(String.format("Attempt to cancel flow execId: %d before flow got a chance to start.",
+              execId));
+      throw new ExecutorManagerException("Flow has not launched yet.");
+    }
+
+    if (Status.isStatusFinished(this.flowRunner.getExecutableFlow().getStatus())) {
+      logger.warn("Found a finished execution in the list of running flows: " + execId);
+      throw new ExecutorManagerException("Execution is already finished.");
+    }
+
+    this.flowRunner.killJobs(user,jobNames);
+  }
+
+  @Override
   public void cancelJobBySLA(final int execId, final String jobId)
       throws ExecutorManagerException {
     if (this.flowRunner == null) {

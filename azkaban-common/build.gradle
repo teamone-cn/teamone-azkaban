@@ -47,6 +47,12 @@ dependencies {
     compile deps.snakeyaml
     compile deps.velocity
     compile deps.kafkaLog4jAppender
+    compile deps.jacksonCoreAsl
+    compile deps.jacksonMapperAsl
+    compile deps.jacksonDatabind
+    compile deps.jacksonCore
+    compile deps.jacksonAnnotation
+    compile deps.jacksonDataFormat
 
     testRuntime deps.h2
 

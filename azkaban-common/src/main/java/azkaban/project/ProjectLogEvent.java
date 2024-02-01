@@ -71,7 +71,13 @@ public class ProjectLogEvent {
     SLA(8),
     PROXY_USER(9),
     PURGE(10),
+    JOB_ADDED(12),
+    JOB_DELETED(13),
+    FLOW_ADDED(14),
+    FLOW_DELETED(15),
     PROPERTY_OVERRIDE(11);
+
+
 
     private final int numVal;
 
@@ -103,6 +109,8 @@ public class ProjectLogEvent {
           return PURGE;
         case 11:
           return PROPERTY_OVERRIDE;
+        case 12:
+          return JOB_ADDED;
         case 128:
           return ERROR;
         default:

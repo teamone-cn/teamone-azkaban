@@ -136,6 +136,9 @@ public interface ProjectLoader {
   void updateFlow(Project project, int version, Flow flow)
       throws ProjectManagerException;
 
+  void updateNewFlow(Project project, int version, Flow flow,String name)
+          throws ProjectManagerException;
+
   /**
    * Uploads all computed flows
    */
@@ -153,6 +156,12 @@ public interface ProjectLoader {
    */
   Flow fetchFlow(Project project, String flowId)
       throws ProjectManagerException;
+
+  /**
+   * uploads one new flow.
+   */
+  Flow uploadNewFlow(Project project, String flowId,int flowVersion)
+          throws ProjectManagerException;
 
   /**
    * Fetches all flows for a given project
@@ -261,6 +270,18 @@ public interface ProjectLoader {
       throws ProjectManagerException;
 
   /**
+   * Uploads other flow file.
+   */
+  void uploadOtherFlowFile(int projectId, int projectVersion, String flowName, int flowVersion)
+          throws ProjectManagerException;
+
+  /**
+   * Deletes flow in project_flows
+   */
+  void deleteFlowInProject(int projectId, int projectVersion, String flowName)
+          throws ProjectManagerException;
+
+  /**
    * Gets flow file that's uploaded.
    */
   File getUploadedFlowFile(int projectId, int projectVersion, String flowFileName, int
@@ -273,6 +294,8 @@ public interface ProjectLoader {
   int getLatestFlowVersion(int projectId, int projectVersion, String flowName)
       throws ProjectManagerException;
 
+  int getOtherLatestFlowVersion(int projectId, int projectVersion, String flowName)
+          throws ProjectManagerException;
   /**
    * Check if flow file has been uploaded.
    */

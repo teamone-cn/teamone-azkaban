@@ -10,7 +10,7 @@ The following set of commands run on *nix platforms like Linux, OS X.
 
 ```
 # Build Azkaban
-./gradlew build
+./gradlew build installDist -x test
 
 # Clean the build
 ./gradlew clean

@@ -394,6 +394,9 @@ class JdbcProjectHandlerSet {
     public static String SELECT_LATEST_FLOW_VERSION = "SELECT MAX(flow_version) FROM "
         + "project_flow_files WHERE project_id=? AND project_version=? AND flow_name=?";
 
+    public static String SELECT_OTHER_LATEST_FLOW_VERSION = "SELECT MAX(flow_version) FROM "
+            + "project_flow_files WHERE project_id=? AND project_version=? AND flow_name<>?";
+
     @Override
     public Integer handle(final ResultSet rs) throws SQLException {
       if (!rs.next()) {

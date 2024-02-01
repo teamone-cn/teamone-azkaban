@@ -18,26 +18,26 @@ plugins {
     id "com.moowork.node" version "1.2.0"
 }
 
-node {
-    // Version of node to use.
-    version = '8.10.0'
-
-    // Version of npm to use.
-    npmVersion = '5.6.0'
-
-    // Base URL for fetching node distributions (change if you have a mirror).
-    distBaseUrl = 'https://nodejs.org/dist/'
-
-    // If true, it will download node using above parameters.
-    // If false, it will try to use globally installed node.
-    download = true
-
-    // Set the work directory for unpacking node
-    workDir = file("${project.buildDir}/nodejs")
-
-    // Set the work directory where node_modules should be located
-    nodeModulesDir = file("${project.projectDir}")
-}
+//node {
+//    // Version of node to use.
+//    version = '8.10.0'
+//
+//    // Version of npm to use.
+//    npmVersion = '5.6.0'
+//
+//    // Base URL for fetching node distributions (change if you have a mirror).
+//    distBaseUrl = 'https://nodejs.org/dist/'
+//
+//    // If true, it will download node using above parameters.
+//    // If false, it will try to use globally installed node.
+//    download = false
+//
+//    // Set the work directory for unpacking node
+//    workDir = file("${project.buildDir}/nodejs")
+//
+//    // Set the work directory where node_modules should be located
+//    nodeModulesDir = file("${project.projectDir}")
+//}
 
 npm_cache_clean {
     args = ['--force']
@@ -52,6 +52,7 @@ configurations {
 }
 
 dependencies {
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.33'
     compile project(':az-core')
     compile(project(':azkaban-common'))
     compile(project(':az-flow-trigger-dependency-plugin'))

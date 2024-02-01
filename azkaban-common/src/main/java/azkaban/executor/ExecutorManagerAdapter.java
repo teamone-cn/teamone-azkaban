@@ -21,6 +21,7 @@ import azkaban.flow.Flow;
 import azkaban.project.Project;
 import azkaban.utils.FileIOUtils.LogData;
 import azkaban.utils.Pair;
+
 import java.io.IOException;
 import java.lang.Thread.State;
 import java.util.Collection;
@@ -31,171 +32,179 @@ import java.util.Set;
 
 public interface ExecutorManagerAdapter {
 
-  public void enableOfflineLogsLoader(boolean enabled);
+    public void enableOfflineLogsLoader(boolean enabled);
 
-  public boolean isOfflineLogsLoaderEnabled();
+    public boolean isOfflineLogsLoaderEnabled();
 
-  public ExecutableFlow getExecutableFlow(int execId)
-      throws ExecutorManagerException;
+    public ExecutableFlow getExecutableFlow(int execId)
+            throws ExecutorManagerException;
 
-  /**
-   * load and set the flow-parameters and other Props to the ExecutableFlow
-   * @param project
-   * @param flow
-   * @return
-   */
-  ExecutableFlow createExecutableFlow(Project project, Flow flow);
+    /**
+     * load and set the flow-parameters and other Props to the ExecutableFlow
+     *
+     * @param project
+     * @param flow
+     * @return
+     */
+    ExecutableFlow createExecutableFlow(Project project, Flow flow);
 
-  public List<Integer> getRunningFlowIds(int projectId, String flowId);
+    public List<Integer> getRunningFlowIds(int projectId, String flowId);
 
-  public List<Integer> getRunningFlowIds();
+    public List<Integer> getRunningFlowIds();
 
-  public long getQueuedFlowSize();
+    public long getQueuedFlowSize();
 
-  public long getAgedQueuedFlowSize();
+    public long getAgedQueuedFlowSize();
 
-  public DispatchMethod getDispatchMethod();
+    public DispatchMethod getDispatchMethod();
 
-  /**
-   * Compute {@link DispatchMethod} based on the {@link ExecutableFlow}
-   */
-  public DispatchMethod getDispatchMethod(ExecutableFlow flow);
+    /**
+     * Compute {@link DispatchMethod} based on the {@link ExecutableFlow}
+     */
+    public DispatchMethod getDispatchMethod(ExecutableFlow flow);
 
-  /**
-   * <pre>
-   * Returns All running with executors and queued flows
-   * Note, returns empty list if there isn't any running or queued flows
-   * </pre>
-   */
-  public List<Pair<ExecutableFlow, Optional<Executor>>> getActiveFlowsWithExecutor()
-      throws IOException;
+    /**
+     * <pre>
+     * Returns All running with executors and queued flows
+     * Note, returns empty list if there isn't any running or queued flows
+     * </pre>
+     */
+    public List<Pair<ExecutableFlow, Optional<Executor>>> getActiveFlowsWithExecutor()
+            throws IOException;
 
-  public List<ExecutableFlow> getRecentlyFinishedFlows();
+    public List<ExecutableFlow> getRecentlyFinishedFlows();
 
-  public List<ExecutableFlow> getExecutableFlows(int skip, int size)
-      throws ExecutorManagerException;
+    public List<ExecutableFlow> getExecutableFlows(int skip, int size)
+            throws ExecutorManagerException;
 
-  public List<ExecutableFlow> getExecutableFlows(String flowIdContains,
-      int skip, int size) throws ExecutorManagerException;
+    public List<ExecutableFlow> getExecutableFlows(String flowIdContains,
+                                                   int skip, int size) throws ExecutorManagerException;
 
-  public List<ExecutableFlow> getExecutableFlows(String projContain,
-      String flowContain, String userContain, int status, long begin, long end,
-      int skip, int size) throws ExecutorManagerException;
+    public List<ExecutableFlow> getExecutableFlows(String projContain,
+                                                   String flowContain, String userContain, int status, long begin, long end,
+                                                   int skip, int size) throws ExecutorManagerException;
 
-  public int getExecutableFlows(int projectId, String flowId, int from,
-      int length, List<ExecutableFlow> outputList)
-      throws ExecutorManagerException;
+    public int getExecutableFlows(int projectId, String flowId, int from,
+                                  int length, List<ExecutableFlow> outputList)
+            throws ExecutorManagerException;
 
-  public List<ExecutableFlow> getExecutableFlows(int projectId, String flowId,
-      int from, int length, Status status) throws ExecutorManagerException;
+    public List<ExecutableFlow> getExecutableFlows(int projectId, String flowId,
+                                                   int from, int length, Status status) throws ExecutorManagerException;
 
-  public List<ExecutableJobInfo> getExecutableJobs(Project project,
-      String jobId, int skip, int size) throws ExecutorManagerException;
+    public List<ExecutableJobInfo> getExecutableJobs(Project project,
+                                                     String jobId, int skip, int size) throws ExecutorManagerException;
 
-  public int getNumberOfJobExecutions(Project project, String jobId)
-      throws ExecutorManagerException;
+    public int getNumberOfJobExecutions(Project project, String jobId)
+            throws ExecutorManagerException;
 
-  public LogData getExecutableFlowLog(ExecutableFlow exFlow, int offset,
-      int length) throws ExecutorManagerException;
+    public LogData getExecutableFlowLog(ExecutableFlow exFlow, int offset,
+                                        int length) throws ExecutorManagerException;
 
-  public LogData getExecutionJobLog(ExecutableFlow exFlow, String jobId,
-      int offset, int length, int attempt) throws ExecutorManagerException;
+    public LogData getExecutionJobLog(ExecutableFlow exFlow, String jobId,
+                                      int offset, int length, int attempt) throws ExecutorManagerException;
 
-  @Deprecated
-  public LogData getExecutionJobLogNearlineOnly(ExecutableFlow exFlow, String jobId,
-      int offset, int length, int attempt) throws ExecutorManagerException;
+    @Deprecated
+    public LogData getExecutionJobLogNearlineOnly(ExecutableFlow exFlow, String jobId,
+                                                  int offset, int length, int attempt) throws ExecutorManagerException;
 
-  public List<Object> getExecutionJobStats(ExecutableFlow exflow, String jobId,
-      int attempt) throws ExecutorManagerException;
+    public List<Object> getExecutionJobStats(ExecutableFlow exflow, String jobId,
+                                             int attempt) throws ExecutorManagerException;
 
-  public Map<String, String> getExternalJobLogUrls(ExecutableFlow exFlow, String jobId,
-      int attempt);
+    public Map<String, String> getExternalJobLogUrls(ExecutableFlow exFlow, String jobId,
+                                                     int attempt);
 
-  public void cancelFlow(ExecutableFlow exFlow, String userId)
-      throws ExecutorManagerException;
+    public void cancelFlow(ExecutableFlow exFlow, String userId)
+            throws ExecutorManagerException;
 
-  public void resumeFlow(ExecutableFlow exFlow, String userId)
-      throws ExecutorManagerException;
+    public void cancelFlowJobs(ExecutableFlow exFlow, String jobNames, String userId)
+            throws ExecutorManagerException;
 
-  public void pauseFlow(ExecutableFlow exFlow, String userId)
-      throws ExecutorManagerException;
+    public void resumeFlow(ExecutableFlow exFlow, String userId)
+            throws ExecutorManagerException;
 
-  public void retryFailures(ExecutableFlow exFlow, String userId)
-      throws ExecutorManagerException;
+    public void pauseFlow(ExecutableFlow exFlow, String userId)
+            throws ExecutorManagerException;
 
-  public String submitExecutableFlow(ExecutableFlow exflow, String userId)
-      throws ExecutorManagerException;
+    public void retryFailures(ExecutableFlow exFlow, String userId)
+            throws ExecutorManagerException;
 
-  public Map<String, String> doRampActions(List<Map<String, Object>> rampAction)
-      throws ExecutorManagerException;
+    public String submitExecutableFlow(ExecutableFlow exflow, String userId)
+            throws ExecutorManagerException;
 
-  Status getStartStatus();
-  /**
-   * Manage servlet call for stats servlet in Azkaban execution server Action can take any of the
-   * following values <ul> <li>{@link azkaban.executor.ConnectorParams#STATS_SET_REPORTINGINTERVAL}<li>
-   * <li>{@link azkaban.executor.ConnectorParams#STATS_SET_CLEANINGINTERVAL}<li> <li>{@link
-   * azkaban.executor.ConnectorParams#STATS_SET_MAXREPORTERPOINTS}<li> <li>{@link
-   * azkaban.executor.ConnectorParams#STATS_GET_ALLMETRICSNAME}<li> <li>{@link
-   * azkaban.executor.ConnectorParams#STATS_GET_METRICHISTORY}<li> <li>{@link
-   * azkaban.executor.ConnectorParams#STATS_SET_ENABLEMETRICS}<li> <li>{@link
-   * azkaban.executor.ConnectorParams#STATS_SET_DISABLEMETRICS}<li> </ul>
-   */
-  public Map<String, Object> callExecutorStats(int executorId, String action,
-      Pair<String, String>... param) throws IOException, ExecutorManagerException;
+    public String submitExecutableFlowJobs(ExecutableFlow exflow, String userId, String jobIds)
+            throws ExecutorManagerException;
 
-  public Map<String, Object> callExecutorJMX(String hostPort, String action,
-      String mBean) throws IOException;
+    public Map<String, String> doRampActions(List<Map<String, Object>> rampAction)
+            throws ExecutorManagerException;
 
-  public void start() throws ExecutorManagerException;
+    Status getStartStatus();
 
-  public void shutdown();
+    /**
+     * Manage servlet call for stats servlet in Azkaban execution server Action can take any of the
+     * following values <ul> <li>{@link azkaban.executor.ConnectorParams#STATS_SET_REPORTINGINTERVAL}<li>
+     * <li>{@link azkaban.executor.ConnectorParams#STATS_SET_CLEANINGINTERVAL}<li> <li>{@link
+     * azkaban.executor.ConnectorParams#STATS_SET_MAXREPORTERPOINTS}<li> <li>{@link
+     * azkaban.executor.ConnectorParams#STATS_GET_ALLMETRICSNAME}<li> <li>{@link
+     * azkaban.executor.ConnectorParams#STATS_GET_METRICHISTORY}<li> <li>{@link
+     * azkaban.executor.ConnectorParams#STATS_SET_ENABLEMETRICS}<li> <li>{@link
+     * azkaban.executor.ConnectorParams#STATS_SET_DISABLEMETRICS}<li> </ul>
+     */
+    public Map<String, Object> callExecutorStats(int executorId, String action,
+                                                 Pair<String, String>... param) throws IOException, ExecutorManagerException;
 
-  public Set<String> getAllActiveExecutorServerHosts();
+    public Map<String, Object> callExecutorJMX(String hostPort, String action,
+                                               String mBean) throws IOException;
 
-  public State getExecutorManagerThreadState();
+    public void start() throws ExecutorManagerException;
 
-  public boolean isExecutorManagerThreadActive();
+    public void shutdown();
 
-  public long getLastExecutorManagerThreadCheckTime();
+    public Set<String> getAllActiveExecutorServerHosts();
 
-  public Set<? extends String> getPrimaryServerHosts();
+    public State getExecutorManagerThreadState();
 
-  /**
-   * Returns a collection of all the active executors maintained by active executors
-   */
-  public Collection<Executor> getAllActiveExecutors();
+    public boolean isExecutorManagerThreadActive();
 
-  /**
-   * <pre>
-   * Fetch executor from executors with a given executorId
-   * Note:
-   * 1. throws an Exception in case of a SQL issue
-   * 2. return null when no executor is found with the given executorId
-   * </pre>
-   */
-  public Executor fetchExecutor(int executorId) throws ExecutorManagerException;
+    public long getLastExecutorManagerThreadCheckTime();
 
-  /**
-   * <pre>
-   * Setup activeExecutors using azkaban.properties and database executors
-   * Note:
-   * 1. If azkaban.use.multiple.executors is set true, this method will
-   *    load all active executors
-   * 2. In local mode, If a local executor is specified and it is missing from db,
-   *    this method add local executor as active in DB
-   * 3. In local mode, If a local executor is specified and it is marked inactive in db,
-   *    this method will convert local executor as active in DB
-   * </pre>
-   */
-  public void setupExecutors() throws ExecutorManagerException;
+    public Set<? extends String> getPrimaryServerHosts();
 
-  /**
-   * Enable flow dispatching in QueueProcessor
-   */
-  public void enableQueueProcessorThread() throws ExecutorManagerException;
+    /**
+     * Returns a collection of all the active executors maintained by active executors
+     */
+    public Collection<Executor> getAllActiveExecutors();
 
-  /**
-   * Disable flow dispatching in QueueProcessor
-   */
-  public void disableQueueProcessorThread() throws ExecutorManagerException;
+    /**
+     * <pre>
+     * Fetch executor from executors with a given executorId
+     * Note:
+     * 1. throws an Exception in case of a SQL issue
+     * 2. return null when no executor is found with the given executorId
+     * </pre>
+     */
+    public Executor fetchExecutor(int executorId) throws ExecutorManagerException;
+
+    /**
+     * <pre>
+     * Setup activeExecutors using azkaban.properties and database executors
+     * Note:
+     * 1. If azkaban.use.multiple.executors is set true, this method will
+     *    load all active executors
+     * 2. In local mode, If a local executor is specified and it is missing from db,
+     *    this method add local executor as active in DB
+     * 3. In local mode, If a local executor is specified and it is marked inactive in db,
+     *    this method will convert local executor as active in DB
+     * </pre>
+     */
+    public void setupExecutors() throws ExecutorManagerException;
+
+    /**
+     * Enable flow dispatching in QueueProcessor
+     */
+    public void enableQueueProcessorThread() throws ExecutorManagerException;
+
+    /**
+     * Disable flow dispatching in QueueProcessor
+     */
+    public void disableQueueProcessorThread() throws ExecutorManagerException;
 }
