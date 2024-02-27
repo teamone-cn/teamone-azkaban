@@ -80,9 +80,23 @@ public class NodeBeanLoader {
         // 新建一个job的节点
         NodeBean jobNode = new NodeBean();
 
+        //todo 如果增加了 http job 方式，那么这里也需要新增一种判断才可以
         // job类型的属性的设置
         HashMap<String, String> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put(prop.get("type"), prop.get(prop.get("type")));
+        if (prop.get("type").equals("command")) {
+            objectObjectHashMap.put(prop.get("type"), prop.get(prop.get("type")));
+        } else if (prop.get("type").equals("http")) {
+            objectObjectHashMap.put("http_job.request.url", prop.get("http_job.request.url"));
+            objectObjectHashMap.put("http_job.request.method", prop.get("http_job.request.method"));
+            objectObjectHashMap.put("http_job.request.content.type", prop.get("http_job.request.content.type"));
+            objectObjectHashMap.put("http_job.request.param", prop.get("http_job.request.param"));
+            objectObjectHashMap.put("http_job.callback.url", prop.get("http_job.callback.url"));
+            objectObjectHashMap.put("http_job.callback.method", prop.get("http_job.callback.method"));
+            objectObjectHashMap.put("http_job.callback.content.type", prop.get("http_job.callback.content.type"));
+            objectObjectHashMap.put("http_job.callback.param", prop.get("http_job.callback.param"));
+        }
+
+        System.out.println("objectObjectHashMap----" + objectObjectHashMap);
 
         // job依赖的设置
         ArrayList<String> dependOnList = new ArrayList<>();
@@ -111,9 +125,9 @@ public class NodeBeanLoader {
      * @return
      * @throws Exception
      */
-    public NodeBean loadAndGenerate(Props prop)  {
+    public NodeBean loadAndGenerate(Props prop) {
 
-        NodeBean nodeBean =  new NodeBean();
+        NodeBean nodeBean = new NodeBean();
 
         ArrayList<NodeBean> jobNodes = new ArrayList<>();
         NodeBean jobNode = new NodeBean();
@@ -128,7 +142,6 @@ public class NodeBeanLoader {
 
         return nodeBean;
     }
-
 
 
     /**

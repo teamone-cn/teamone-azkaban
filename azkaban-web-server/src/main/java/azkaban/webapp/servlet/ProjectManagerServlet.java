@@ -1018,18 +1018,37 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
             return;
         }
 
-        if (jobParams.get("newJobName") == null || jobParams.get("command") == null || jobParams.get("type") == null) {
+        // todo 如果增加了 http job 方式，那么这里也需要新增一种判断才可以
+        if (jobParams.get("newJobName") == null || jobParams.get("type") == null) {
             ret.put(ERROR_PARAM,
-                    "you should set newJobProp props (type,command,type)!  " +
-                            "newJobProp[type],newJobProp[command],newJobProp[newJobName]");
+                    "you should set newJobProp props (type,type)! eg. newJobProp[type],newJobProp[newJobName]");
             return;
         }
+
+        if (jobParams.get("type").equals("command") && jobParams.get("command") == null) {
+            ret.put(ERROR_PARAM,
+                    "you should set newJobProp props (command) in the type of command! eg. newJobProp[command]");
+            return;
+        }
+
+        if(jobParams.get("type").equals("http") &&
+                (jobParams.get("http_job.request.url") == null || jobParams.get("http_job.request.method") == null
+                || jobParams.get("http_job.request.content.type") == null || jobParams.get("http_job.request.param") == null
+                || jobParams.get("http_job.callback.url") == null || jobParams.get("http_job.callback.method") == null
+                || jobParams.get("http_job.callback.content.type") == null || jobParams.get("http_job.callback.param") == null)){
+            ret.put(ERROR_PARAM,
+                    "you should set newJobProp props (" +
+                            "http_job.request.url,http_job.request.method,http_job.request.content.type,http_job.request.param," +
+                            "http_job.callback.url,http_job.callback.method,http_job.callback.content.type,http_job.callback.param" +
+                            ") in the type of http! eg. newJobProp[http_job.request.url]");
+            return;
+        }
+
 
         if (flow.getNode(jobParams.get("newJobName")) != null) {
             ret.put(ERROR_PARAM, " jobName already exists");
             return;
         }
-
 
         ArrayList<String> jobNames = new ArrayList<>();
         for (Node allNode : flow.getNodes()) {

@@ -560,6 +560,11 @@ public class JobTypeManager {
     }
 
     try {
+      logger.info("jobParams.jobClass---"+jobParams.jobClass);
+      logger.info("jobId---"+jobId);
+      logger.info("jobParams.pluginLoadProps---"+jobParams.pluginLoadProps);
+      logger.info("jobParams.jobProps---"+jobParams.jobProps);
+
       return
           (Job) Utils.callConstructor(jobParams.jobClass, jobId, jobParams.pluginLoadProps,
               jobParams.jobProps, logger);
