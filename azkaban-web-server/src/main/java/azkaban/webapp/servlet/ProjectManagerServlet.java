@@ -1031,11 +1031,11 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
             return;
         }
 
-        if(jobParams.get("type").equals("http") &&
+        if (jobParams.get("type").equals("http") &&
                 (jobParams.get("http_job.request.url") == null || jobParams.get("http_job.request.method") == null
-                || jobParams.get("http_job.request.content.type") == null || jobParams.get("http_job.request.param") == null
-                || jobParams.get("http_job.callback.url") == null || jobParams.get("http_job.callback.method") == null
-                || jobParams.get("http_job.callback.content.type") == null || jobParams.get("http_job.callback.param") == null)){
+                        || jobParams.get("http_job.request.content.type") == null || jobParams.get("http_job.request.param") == null
+                        || jobParams.get("http_job.callback.url") == null || jobParams.get("http_job.callback.method") == null
+                        || jobParams.get("http_job.callback.content.type") == null || jobParams.get("http_job.callback.param") == null)) {
             ret.put(ERROR_PARAM,
                     "you should set newJobProp props (" +
                             "http_job.request.url,http_job.request.method,http_job.request.content.type,http_job.request.param," +
@@ -1067,6 +1067,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
         try {
             // 这里增加新的job到当前flow下
             this.projectManager.addJobInCurrentFlow(project, flow, jobParams, flowName, user);
+            ret.put("msg", "success");
         } catch (final ProjectManagerException e) {
             ret.put(ERROR_PARAM, "Failed to add job in this flow! please contact administrator for help");
         }
@@ -1111,6 +1112,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
         try {
             // 这里删除当前flow下指定的jobs
             this.projectManager.deleteJobsInCurrentFlow(project, flow, deleteJobNames, flowName, user);
+            ret.put("msg", "success");
         } catch (final ProjectManagerException e) {
             ret.put(ERROR_PARAM, "Failed to add job in this flow! please contact administrator for help");
         }
@@ -1152,6 +1154,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
 
         try {
             this.projectManager.addFlowInCurrentProject(project, flowParams, user);
+            ret.put("msg", "success");
         } catch (final ProjectManagerException e) {
             ret.put(ERROR_PARAM, "Failed to add flow in this flow! please contact administrator for help");
         }
@@ -1181,6 +1184,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
 
         try {
             this.projectManager.deleteFlowInCurrentProject(project, flowName, user);
+            ret.put("msg", "success");
         } catch (final ProjectManagerException e) {
             ret.put(ERROR_PARAM, "Failed to add flow in this flow! please contact administrator for help");
         }
@@ -1215,6 +1219,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
             this.projectManager
                     .setJobOverrideProperty(project, flow, overrideParams, jobName, node.getJobSource(),
                             user);
+            ret.put("msg", "success");
         } catch (final ProjectManagerException e) {
             ret.put(ERROR_PARAM, "Failed to upload job override property");
         }

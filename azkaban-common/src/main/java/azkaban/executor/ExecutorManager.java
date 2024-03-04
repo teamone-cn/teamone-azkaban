@@ -685,12 +685,20 @@ public class ExecutorManager extends AbstractExecutorManagerAdapter {
             logger.info(message);
             return message;
         }
+
+        List<DisabledJob> disabledJobs = new ArrayList<>();
+        DisabledJob disabledJob;
+
         // 如果不在 jobIds 里面的话，就把状态设置为跳过，不执行这些job
         for (ExecutableNode en : exflow.getExecutableNodes()) {
             if (jobIds.indexOf(en.getId()) == -1) {
-                en.setStatus(Status.SKIPPED);
+                disabledJob = new DisabledJob(en.getId());
+                disabledJobs.add(disabledJob);
             }
         }
+
+        ExecutionOptions executionOptions = exflow.getExecutionOptions();
+        executionOptions.setDisabledJobs(disabledJobs);
 
         final String exFlowKey = exflow.getProjectName() + "." + exflow.getId() + ".submitFlow";
         // using project and flow name to prevent race condition when same flow is submitted by API and schedule at the same time
