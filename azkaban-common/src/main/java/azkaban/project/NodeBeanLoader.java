@@ -90,20 +90,24 @@ public class NodeBeanLoader {
             objectObjectHashMap.put("http_job.request.method", prop.get("http_job.request.method"));
             objectObjectHashMap.put("http_job.request.content.type", prop.get("http_job.request.content.type"));
             objectObjectHashMap.put("http_job.request.param", prop.get("http_job.request.param"));
+            objectObjectHashMap.put("http_job.request.callback.param.key", prop.get("http_job.request.callback.param.key"));
+            objectObjectHashMap.put("http_job.request.timeout", prop.get("http_job.request.timeout"));
+            objectObjectHashMap.put("http_job.request.code", prop.get("http_job.request.code"));
+            objectObjectHashMap.put("http_job.request.needToken", prop.get("http_job.request.needToken"));
             objectObjectHashMap.put("http_job.callback.url", prop.get("http_job.callback.url"));
             objectObjectHashMap.put("http_job.callback.method", prop.get("http_job.callback.method"));
             objectObjectHashMap.put("http_job.callback.content.type", prop.get("http_job.callback.content.type"));
             objectObjectHashMap.put("http_job.callback.param", prop.get("http_job.callback.param"));
+            objectObjectHashMap.put("http_job.callback.timeout", prop.get("http_job.callback.timeout"));
+            objectObjectHashMap.put("http_job.callback.code", prop.get("http_job.callback.code"));
+            objectObjectHashMap.put("http_job.callback.needToken", prop.get("http_job.callback.needToken"));
         }
 
         System.out.println("objectObjectHashMap----" + objectObjectHashMap);
 
         // job依赖的设置
-        ArrayList<String> dependOnList = new ArrayList<>();
         if (StringUtils.isNotEmpty(prop.get("dependOn"))) {
-            for (String depend : prop.get("dependOn").split(",")) {
-                dependOnList.add(depend);
-            }
+            ArrayList<String> dependOnList = new ArrayList<>(Arrays.asList(prop.get("dependOn").split(",")));
             jobNode.setDependsOn(dependOnList);
         }
 

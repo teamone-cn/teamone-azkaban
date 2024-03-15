@@ -1031,19 +1031,11 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
             return;
         }
 
-        if (jobParams.get("type").equals("http") &&
-                (jobParams.get("http_job.request.url") == null || jobParams.get("http_job.request.method") == null
-                        || jobParams.get("http_job.request.content.type") == null || jobParams.get("http_job.request.param") == null
-                        || jobParams.get("http_job.callback.url") == null || jobParams.get("http_job.callback.method") == null
-                        || jobParams.get("http_job.callback.content.type") == null || jobParams.get("http_job.callback.param") == null)) {
+        if (jobParams.get("type").equals("http") && jobParams.get("http_job.request.url") == null ) {
             ret.put(ERROR_PARAM,
-                    "you should set newJobProp props (" +
-                            "http_job.request.url,http_job.request.method,http_job.request.content.type,http_job.request.param," +
-                            "http_job.callback.url,http_job.callback.method,http_job.callback.content.type,http_job.callback.param" +
-                            ") in the type of http! eg. newJobProp[http_job.request.url]");
+                    "you should set newJobProp props (http_job.request.url) eg. newJobProp[http_job.request.url]");
             return;
         }
-
 
         if (flow.getNode(jobParams.get("newJobName")) != null) {
             ret.put(ERROR_PARAM, " jobName already exists");
