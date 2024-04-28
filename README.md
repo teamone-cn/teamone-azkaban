@@ -5,7 +5,7 @@
 1. 支持通过接口调用的方式创建，删除project
 2. 支持通过接口调用的方式创建，修改，删除flow，支持定时调度 flow 中的部分任务(非全部)，支持停止flow中的部分任务(非全部)
 3. 支持通过接口调用的方式创建，修改，删除job，同时支持新增时设置依赖关系，删除时自动挂载到上级依赖
-4. 支持 http 类型的job，该类型由 Teamone Azkaban Http plugin 提供，支持设置http任务，Azkaban部署所在服务器作为客户端进行 http 调用，其他特征和 command job 一致
+4. 支持 http 类型的job，该类型由 Teamone Azkaban Plugins 提供，支持设置http任务，Azkaban部署所在服务器作为客户端进行 http 调用，其他特征和 command job 一致
 5. 修正了部分 Azkaban 本身的bug，如新增job初始化时空指针等错误
 
 # 安装方式
