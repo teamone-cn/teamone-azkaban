@@ -1,3 +1,27 @@
+# Teamone Azkaban
+基于 Azkaban 3.91.0 版本，新增或修改支持通过Http方式调用新增、修改、删除、编辑job 或 flow 或 project等操作，用于支撑霆万调度中心
+
+# 主要特性
+1. 支持通过接口调用的方式创建，删除project
+2. 支持通过接口调用的方式创建，修改，删除flow
+3. 支持通过接口调用的方式创建，修改，删除job，同时支持新增时设置依赖关系，删除时自动挂载到上级依赖
+4. 支持 http 类型的job，该类型由 Teamone Azkaban Http plugin 提供，支持设置http任务，Azkaban部署所在服务器作为客户端进行 http 调用，其他特征和 command job 一致
+5. 修正了部分 Azkaban 本身的bug，如新增job初始化时空指针等错误
+
+# 安装方式
+
+执行如下命令
+```shell
+./gradlew build installDist -x test
+```
+即可得到
+azkaban-exec-server.tar.gz
+azkaban-web-server.tar.gz
+
+然后上传到服务器进行设置和部署
+
+
+其他可参考官方文档：
 # Azkaban 
 
 [![Build Status](https://travis-ci.com/azkaban/azkaban.svg?branch=master)](https://travis-ci.com/azkaban/azkaban)[![codecov.io](https://codecov.io/github/azkaban/azkaban/branch/master/graph/badge.svg)](https://codecov.io/github/azkaban/azkaban)[![Join the chat at https://gitter.im/azkaban-workflow-engine/Lobby](https://badges.gitter.im/azkaban-workflow-engine/Lobby.svg)](https://gitter.im/azkaban-workflow-engine/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![Documentation Status](https://readthedocs.org/projects/azkaban/badge/?version=latest)](https://azkaban.readthedocs.org/en/latest/?badge=latest)
