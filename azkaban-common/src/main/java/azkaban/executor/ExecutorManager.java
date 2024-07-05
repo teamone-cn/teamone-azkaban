@@ -39,16 +39,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.io.File;
 import java.lang.Thread.State;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -338,6 +329,17 @@ public class ExecutorManager extends AbstractExecutorManagerAdapter {
             }
         }
         return this.executorLoader.fetchExecutor(executorId);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see azkaban.executor.ExecutorManagerAdapter#fetchExecutorByHostAndPort(String, int) 
+     */
+    @Override
+    public Executor fetchExecutorByHostAndPort(String host,int port) throws ExecutorManagerException {
+        // 强制从数据库读一遍
+        return this.executorLoader.fetchExecutor(host,port);
     }
 
     @Override
@@ -901,6 +903,8 @@ public class ExecutorManager extends AbstractExecutorManagerAdapter {
                 } else {
                     exflow.setUpdateTime(currentTime);
                     // process flow with current snapshot of activeExecutors
+                    // 不用快照，直接刷新
+                    refreshExecutors();
                     selectExecutorAndDispatchFlow(reference, exflow);
                     ExecutorManager.this.runningCandidate = null;
                 }
@@ -984,34 +988,27 @@ public class ExecutorManager extends AbstractExecutorManagerAdapter {
         private Executor getUserSpecifiedExecutor(final ExecutionOptions options,
                                                   final int executionId) {
             Executor executor = null;
+            String executors = "";
             if (options != null
                     && options.getFlowParameters() != null
                     && options.getFlowParameters().containsKey(
                     ExecutionOptions.USE_EXECUTOR)) {
                 try {
-                    final int executorId =
-                            Integer.valueOf(options.getFlowParameters().get(
-                                    ExecutionOptions.USE_EXECUTOR));
-                    executor = fetchExecutor(executorId);
+                    // 因为id会变化，所有修改为根据host 和 port 来判断，格式为: host1:port1,host2:port2,host3:port3
+                    executors = options.getFlowParameters().get(ExecutionOptions.USE_EXECUTOR);
 
-                    if (executor == null) {
-                        ExecutorManager.logger
-                                .warn(String
-                                        .format(
-                                                "User specified executor id: %d for execution id: %d is not active, Looking up db.",
-                                                executorId, executionId));
-                        executor = ExecutorManager.this.executorLoader.fetchExecutor(executorId);
-                        if (executor == null) {
-                            ExecutorManager.logger
-                                    .warn(String
-                                            .format(
-                                                    "User specified executor id: %d for execution id: %d is missing from db. Defaulting to availableExecutors",
-                                                    executorId, executionId));
+                    Iterator<String> iterator = Arrays.stream(executors.split(",")).iterator();
+                    while (iterator.hasNext()) {
+                        String[] split = iterator.next().split(":");
+                        executor = fetchExecutorByHostAndPort(split[0].trim(), Integer.parseInt(split[1].trim()));
+                        if (!Objects.isNull(executor) && executor.isActive()){
+                            break;
                         }
+                        ExecutorManager.logger.info("寻找下一个！！！");
                     }
                 } catch (final ExecutorManagerException ex) {
-                    ExecutorManager.logger.error("Failed to fetch user specified executor for exec_id = "
-                            + executionId, ex);
+                    ExecutorManager.logger.error("Failed to fetch user specified executor for host and port "
+                            + executors, ex);
                 }
             }
             return executor;

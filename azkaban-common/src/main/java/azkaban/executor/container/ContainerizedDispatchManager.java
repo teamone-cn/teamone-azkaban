@@ -592,6 +592,11 @@ public class ContainerizedDispatchManager extends AbstractExecutorManagerAdapter
   }
 
   @Override
+  public Executor fetchExecutorByHostAndPort(String host, int port) throws ExecutorManagerException {
+    throw new UnsupportedOperationException("Unsupported Method");
+  }
+
+  @Override
   public void setupExecutors() throws ExecutorManagerException {
     throw new UnsupportedOperationException("Unsupported Method");
   }

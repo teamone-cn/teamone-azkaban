@@ -186,6 +186,16 @@ public interface ExecutorManagerAdapter {
 
     /**
      * <pre>
+     * Fetch executor from executors with a given host and port
+     * Note:
+     * 1. throws an Exception in case of a SQL issue
+     * 2. return null when no executor is found with the given host and port
+     * </pre>
+     */
+    public Executor fetchExecutorByHostAndPort(String host,int port) throws ExecutorManagerException;
+
+    /**
+     * <pre>
      * Setup activeExecutors using azkaban.properties and database executors
      * Note:
      * 1. If azkaban.use.multiple.executors is set true, this method will

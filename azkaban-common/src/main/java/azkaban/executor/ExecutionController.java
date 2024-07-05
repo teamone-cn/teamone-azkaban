@@ -118,6 +118,11 @@ public class ExecutionController extends AbstractExecutorManagerAdapter {
   }
 
   @Override
+  public Executor fetchExecutorByHostAndPort(String host, int port) throws ExecutorManagerException {
+    return this.executorLoader.fetchExecutor(host,port);
+  }
+
+  @Override
   public Set<String> getPrimaryServerHosts() {
     final HashSet<String> ports = new HashSet<>();
     try {

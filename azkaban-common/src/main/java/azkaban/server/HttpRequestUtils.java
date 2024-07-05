@@ -288,7 +288,7 @@ public class HttpRequestUtils {
 
     } else {
       validateIntegerParam(params, ExecutionOptions.FLOW_PRIORITY);
-      validateIntegerParam(params, ExecutionOptions.USE_EXECUTOR);
+//      validateIntegerParam(params, ExecutionOptions.USE_EXECUTOR);
       validateBooleanParam(params, FlowParameters.FLOW_PARAM_JAVA_ENABLE_DEBUG);
       validateBooleanParam(params, FlowParameters.FLOW_PARAM_ENABLE_DEV_POD);
       validateBooleanParam(params, FlowParameters.FLOW_PARAM_DISABLE_POD_CLEANUP);
