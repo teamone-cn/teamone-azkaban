@@ -35,6 +35,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import org.apache.log4j.Logger;
+import java.security.Security;
 
 public class EmailMessage {
 
@@ -180,6 +181,14 @@ public class EmailMessage {
     props.put("mail.smtp.connectiontimeout", _connectionTimeout);
     props.put("mail.smtp.starttls.enable", this._tls);
     props.put("mail.smtp.ssl.trust", this._mailHost);
+
+    // https://blog.csdn.net/Realoyou/article/details/102796419 增加smtps发送邮件，端口为465
+    Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+    final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+    props.setProperty("mail.smtp.socketFactory.fallback", "false");
+    props.setProperty("mail.smtp.socketFactory.port", "465");
+
 
     final JavaxMailSender sender = this.creator.createSender(props);
     final Message message = sender.createMessage();
