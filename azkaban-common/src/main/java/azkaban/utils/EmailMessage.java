@@ -175,9 +175,6 @@ public class EmailMessage {
     } else {
       props.put("mail.smtp.auth", "false");
     }
-    props.put("mail.smtp.host", this._mailHost);
-    props.put("mail.smtp.port", this._mailPort);
-    props.put("mail.smtp.timeout", _mailTimeout);
     props.put("mail.smtp.connectiontimeout", _connectionTimeout);
     props.put("mail.smtp.starttls.enable", this._tls);
     props.put("mail.smtp.ssl.trust", this._mailHost);

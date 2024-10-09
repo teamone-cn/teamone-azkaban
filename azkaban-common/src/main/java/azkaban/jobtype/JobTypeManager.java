@@ -62,7 +62,7 @@ public class JobTypeManager {
   private final ClassLoader parentLoader;
   private final Props globalProperties;
   private final ClusterRouter clusterRouter;
-  private JobTypePluginSet pluginSet;
+  private final JobTypePluginSet pluginSet ;;
   // Only used to load keyStore.
   private Props cachedCommonPluginLoadProps;
   // Overridable plugin load properties
@@ -82,30 +82,28 @@ public class JobTypeManager {
     this.globalProperties = globalProperties;
     this.clusterRouter = clusterRouter;
     this.pluginLoadOverrideProps = pluginLoadOverrideProps;
-    loadPlugins();
+    this.pluginSet = loadPlugins();
   }
 
-  public void loadPlugins() throws JobTypeManagerException {
+  public JobTypePluginSet loadPlugins() throws JobTypeManagerException {
     final JobTypePluginSet plugins = new JobTypePluginSet();
-
-    loadDefaultTypes(plugins);
-    if (this.jobTypePluginDir != null) {
-      final File pluginDir = new File(this.jobTypePluginDir);
-      if (pluginDir.exists()) {
-        LOGGER.info("Job type plugin directory set. Loading extra job types from " + pluginDir);
-        try {
-          loadPluginJobTypes(plugins);
-        } catch (final Exception e) {
-          LOGGER.info("Plugin jobtypes failed to load. " + e.getCause(), e);
-          throw new JobTypeManagerException(e);
+    synchronized (this) {
+      loadDefaultTypes(plugins);
+      if (this.jobTypePluginDir != null) {
+        final File pluginDir = new File(this.jobTypePluginDir);
+        if (pluginDir.exists()) {
+          LOGGER.info("Job type plugin directory set. Loading extra job types from " + pluginDir);
+          try {
+            loadPluginJobTypes(plugins);
+          } catch (final Exception e) {
+            LOGGER.info("Plugin jobtypes failed to load. " + e.getCause(), e);
+            throw new JobTypeManagerException(e);
+          }
         }
       }
     }
-
+      return plugins;
     // Swap the plugin set. If exception is thrown, then plugin isn't swapped.
-    synchronized (this) {
-      this.pluginSet = plugins;
-    }
   }
 
   private void loadDefaultTypes(final JobTypePluginSet plugins)
@@ -416,13 +414,18 @@ public class JobTypeManager {
       }
       logger.info(String.format("JobClassLoader URLs: %s", jobClassLoaderUrls.stream()
           .map(URL::toString).collect(Collectors.joining(", "))));
-      final ClassLoader jobClassLoader = new JobClassLoader(
-          jobClassLoaderUrls.toArray(new URL[jobClassLoaderUrls.size()]),
-          jobContextClassLoader, jobId);
+
+      final String jobTypeClassName = pluginSet.getPluginClassName(jobType);
+
+      final ClassLoader jobClassLoader = JobClassLoader.getInstance(jobClassLoaderUrls.toArray(new URL[jobClassLoaderUrls.size()]),
+              jobContextClassLoader, jobId,jobTypeClassName);
+//              new JobClassLoader(
+//          jobClassLoaderUrls.toArray(new URL[jobClassLoaderUrls.size()]),
+//          jobContextClassLoader, jobId);
 
 
       // load the jobtype from JobClassLoader
-      final String jobTypeClassName = pluginSet.getPluginClassName(jobType);
+
       final Class<? extends Object> jobTypeClass = jobClassLoader.loadClass(jobTypeClassName);
       if (jobTypeClass == null) {
         throw new JobExecutionException(String.format("Job type [%s] "

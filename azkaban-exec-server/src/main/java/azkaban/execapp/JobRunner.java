@@ -45,10 +45,7 @@ import azkaban.jobtype.JobTypeManager;
 import azkaban.jobtype.JobTypeManagerException;
 import azkaban.logs.ExecutionLogsLoader;
 import azkaban.spi.EventType;
-import azkaban.utils.ExecuteAsUser;
-import azkaban.utils.KafkaLog4jUtils;
-import azkaban.utils.Props;
-import azkaban.utils.StringUtils;
+import azkaban.utils.*;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -358,7 +355,7 @@ public class JobRunner extends JobRunnerBase implements Runnable {
     // Create logger
     synchronized (logCreatorLock) {
       final String loggerName =
-          System.currentTimeMillis() + "." + this.executionId + "."
+          System.currentTimeMillis() + "_" + this.executionId + "_"
               + this.jobId;
       this.logger = Logger.getLogger(loggerName);
 
@@ -433,6 +430,7 @@ public class JobRunner extends JobRunnerBase implements Runnable {
   private void closeLogger() {
     removeAppender(this.jobAppender);
     removeAppender(this.kafkaLog4jAppender);
+    Log4jHelper.closeLogger(this.logger);
   }
 
   private void writeStatus() {

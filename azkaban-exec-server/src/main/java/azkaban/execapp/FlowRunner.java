@@ -31,7 +31,7 @@ import azkaban.Constants.ConfigurationKeys;
 import azkaban.DispatchMethod;
 import azkaban.ServiceProvider;
 import azkaban.logs.ExecutionLogsLoader;
-import azkaban.utils.ServerUtils;
+import azkaban.utils.*;
 import azkaban.event.Event;
 import azkaban.event.EventData;
 import azkaban.event.EventHandler;
@@ -67,9 +67,6 @@ import azkaban.sla.SlaOption;
 import azkaban.spi.AzkabanEventReporter;
 import azkaban.spi.EventType;
 import azkaban.spi.ExecutorType;
-import azkaban.utils.KafkaLog4jUtils;
-import azkaban.utils.Props;
-import azkaban.utils.SwapQueue;
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
@@ -91,7 +88,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -522,7 +518,7 @@ public class FlowRunner extends EventHandler<Event> implements Runnable {
         }
 
         // Not containerized execution, fallback to existing logic.
-        final String loggerName = this.execId + "." + flowId;
+        final String loggerName = this.execId + "_" + flowId;
         this.logger = Logger.getLogger(loggerName);
 
         // Create file appender
@@ -573,6 +569,7 @@ public class FlowRunner extends EventHandler<Event> implements Runnable {
                 logger.error("Failed to close logger", e);
             }
         }
+        Log4jHelper.closeLogger(this.logger);
     }
 
     private void loadAllProperties() throws IOException {

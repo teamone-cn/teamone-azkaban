@@ -20,6 +20,8 @@ import azkaban.utils.Props;
 import com.google.common.annotations.VisibleForTesting;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +38,16 @@ public class JobClassLoader extends URLClassLoader {
   private static final String AZKABAN_SECURITY_CLASS = "azkaban.security";
   private final String jobId;
   private final ClassLoader parent;
+  private static final  HashMap<String,JobClassLoader> jobClassMap = new HashMap<>();
 
-  public JobClassLoader(final URL[] urls, final ClassLoader parent, final String jobId) {
+  public static JobClassLoader getInstance(URL[] urls,ClassLoader parent,String jobId,String jobTypeName){
+    if(jobClassMap.get(jobTypeName) == null){
+      jobClassMap.put(jobTypeName, new JobClassLoader(urls,parent,jobId));
+    }
+    return jobClassMap.get(jobTypeName);
+  }
+
+  private JobClassLoader(final URL[] urls, final ClassLoader parent, final String jobId) {
     super(urls, parent);
     this.parent = parent;
     this.jobId = jobId;
